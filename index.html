@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Claude Code の Skills・SubAgents・Commands を活用したAI開発の実績ポートフォリオ">
+<meta property="og:title" content="AI Dev Portfolio — Built with Claude Code">
+<meta property="og:description" content="Skills・SubAgents・Commandsを活用したAI開発の実績">
+<meta property="og:type" content="website">
+<title>AI Dev Portfolio ✨</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   RESET & VARIABLES
+═══════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg:         #FFF5FA;
+  --bg-sub:     #F3F0FF;
+  --primary:    #FBC2D9;
+  --secondary:  #B8C7F0;
+  --accent:     #C9B6F0;
+  --mint:       #BFE6D9;
+  --highlight:  #FFF0B3;
+  --text:       #8A6B9E;
+  --text-sub:   #A98FB0;
+  --white:      #ffffff;
+  --radius-card: 28px;
+  --radius-btn:  999px;
+  --shadow-card: 0 8px 40px rgba(201,182,240,.18);
+  --shadow-hover: 0 20px 60px rgba(201,182,240,.32);
+  --transition: .3s cubic-bezier(.34,1.56,.64,1);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Nunito', 'Noto Sans JP', sans-serif;
+  font-weight: 400;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════
+   SPARKLES LAYER
+═══════════════════════════════════════ */
+#sparkles {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0; overflow: hidden;
+}
+.sp {
+  position: absolute;
+  animation: floatSp linear infinite;
+  user-select: none;
+}
+@keyframes floatSp {
+  0%   { transform: translateY(0px) rotate(0deg) scale(1);   opacity: .7; }
+  50%  { transform: translateY(-45vh) rotate(180deg) scale(1.1); opacity: .4; }
+  100% { transform: translateY(-100vh) rotate(360deg) scale(.8); opacity: 0; }
+}
+
+/* ═══════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 52px; height: 62px;
+  background: rgba(255,245,250,.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1.5px solid rgba(251,194,217,.28);
+  transition: box-shadow .3s;
+}
+nav.scrolled { box-shadow: 0 4px 24px rgba(201,182,240,.15); }
+.nav-logo {
+  font-size: 17px; font-weight: 800; letter-spacing: .06em;
+  background: linear-gradient(100deg, #FBC2D9 0%, #C9B6F0 55%, #B8C7F0 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links a {
+  font-size: 13px; font-weight: 700; color: var(--text-sub);
+  text-decoration: none; letter-spacing: .04em;
+  transition: color .2s;
+  position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; left: 0; bottom: -3px;
+  width: 0; height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, #FBC2D9, #C9B6F0);
+  transition: width .3s;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-links a:hover::after { width: 100%; }
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+#hero {
+  position: relative; z-index: 1;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 110px 24px 80px;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 85%, rgba(184,199,240,.30) 0%, transparent 65%),
+    radial-gradient(ellipse 65% 55% at 85% 15%, rgba(251,194,217,.34) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 50% at 50% 55%, rgba(201,182,240,.20) 0%, transparent 70%),
+    var(--bg);
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 7px 22px; border-radius: var(--radius-btn);
+  background: var(--white);
+  border: 2px solid var(--primary);
+  color: var(--text); font-size: 13px; font-weight: 700;
+  box-shadow: 0 4px 20px rgba(251,194,217,.28);
+  margin-bottom: 32px;
+  animation: fadeSlideDown .7s ease both;
+}
+.badge-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: linear-gradient(135deg, #FBC2D9, #C9B6F0);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.5);opacity:.5} }
+@keyframes fadeSlideDown { from{opacity:0;transform:translateY(-18px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeSlideUp   { from{opacity:0;transform:translateY(24px)}  to{opacity:1;transform:translateY(0)} }
+
+.hero-title {
+  font-size: clamp(40px, 7vw, 76px);
+  font-weight: 800; letter-spacing: -.02em; line-height: 1.1;
+  color: var(--text); margin-bottom: 22px;
+  animation: fadeSlideUp .8s .1s ease both;
+}
+.hero-title .grad {
+  background: linear-gradient(110deg, #FBC2D9 0%, #C9B6F0 50%, #B8C7F0 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: 16px; color: var(--text-sub); max-width: 480px;
+  line-height: 1.85; margin-bottom: 44px;
+  animation: fadeSlideUp .8s .2s ease both;
+}
+.hero-cta-group {
+  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+  animation: fadeSlideUp .8s .3s ease both;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 36px; border-radius: var(--radius-btn);
+  background: linear-gradient(120deg, #FBC2D9, #C9B6F0, #B8C7F0);
+  color: var(--white); font-size: 15px; font-weight: 800;
+  text-decoration: none; letter-spacing: .04em;
+  box-shadow: 0 8px 28px rgba(201,182,240,.45);
+  transition: transform .3s, box-shadow .3s;
+}
+.btn-primary:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(201,182,240,.55); }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px; border-radius: var(--radius-btn);
+  background: var(--white); color: var(--text);
+  font-size: 15px; font-weight: 700; text-decoration: none;
+  border: 2px solid rgba(201,182,240,.4);
+  box-shadow: 0 4px 16px rgba(201,182,240,.15);
+  transition: transform .3s, box-shadow .3s, border-color .3s;
+}
+.btn-secondary:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 12px 28px rgba(201,182,240,.25); }
+
+/* scroll indicator */
+.scroll-hint {
+  position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: var(--text-sub); font-size: 12px; font-weight: 600; letter-spacing: .08em;
+  animation: fadeSlideUp 1s .6s ease both;
+}
+.scroll-dot {
+  width: 28px; height: 44px; border: 2px solid rgba(201,182,240,.5);
+  border-radius: 14px; position: relative;
+}
+.scroll-dot::before {
+  content: ''; position: absolute; left: 50%; top: 7px;
+  width: 4px; height: 8px; border-radius: 2px;
+  background: var(--accent); transform: translateX(-50%);
+  animation: scrollBounce 1.6s ease-in-out infinite;
+}
+@keyframes scrollBounce { 0%,100%{top:7px;opacity:1} 50%{top:20px;opacity:.3} }
+
+/* ═══════════════════════════════════════
+   DIVIDER
+═══════════════════════════════════════ */
+.divider {
+  text-align: center; padding: 10px 0;
+  font-size: 18px; letter-spacing: 14px;
+  color: var(--primary); opacity: .7;
+  position: relative; z-index: 1;
+}
+
+/* ═══════════════════════════════════════
+   SECTION
+═══════════════════════════════════════ */
+.section {
+  position: relative; z-index: 1;
+  padding: 100px 52px;
+  max-width: 1140px; margin: 0 auto;
+}
+.section-bg { background: var(--bg-sub); }
+.section-bg .section { max-width: 100%; }
+.section-bg .section-inner { max-width: 1140px; margin: 0 auto; }
+
+.sec-eyebrow {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 11px; font-weight: 800; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 10px;
+}
+.sec-eyebrow::before { content: '✦'; }
+.sec-title {
+  font-size: clamp(28px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -.02em; color: var(--text); margin-bottom: 56px;
+}
+
+/* ═══════════════════════════════════════
+   BENTO GRID
+═══════════════════════════════════════ */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+.bento .card { opacity: 0; transform: translateY(30px); }
+.bento .card.visible {
+  animation: cardIn .6s ease forwards;
+}
+@keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
+
+.card {
+  background: var(--white);
+  border: 1.5px solid rgba(201,182,240,.22);
+  border-radius: var(--radius-card);
+  padding: 34px;
+  box-shadow: var(--shadow-card);
+  transition: transform var(--transition), box-shadow var(--transition), border-color .3s;
+  position: relative; overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute; top: -40%; right: -40%;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(251,194,217,.15), transparent 70%);
+  transition: opacity .4s;
+  opacity: 0;
+}
+.card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); border-color: rgba(201,182,240,.5); }
+.card:hover::before { opacity: 1; }
+
+.card.wide { grid-column: span 2; }
+.card.tall  { grid-row: span 2; }
+
+.card-icon-wrap {
+  width: 56px; height: 56px; border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; margin-bottom: 20px;
+  flex-shrink: 0;
+}
+.i-pink   { background: linear-gradient(135deg,#fde8f0,#fbc2d9); box-shadow: 0 4px 16px rgba(251,194,217,.4); }
+.i-purple { background: linear-gradient(135deg,#eee8fb,#c9b6f0); box-shadow: 0 4px 16px rgba(201,182,240,.4); }
+.i-blue   { background: linear-gradient(135deg,#e2eafb,#b8c7f0); box-shadow: 0 4px 16px rgba(184,199,240,.4); }
+.i-mint   { background: linear-gradient(135deg,#ddf4ed,#bfe6d9); box-shadow: 0 4px 16px rgba(191,230,217,.4); }
+.i-yellow { background: linear-gradient(135deg,#fffce0,#fff0b3); box-shadow: 0 4px 16px rgba(255,240,179,.5); }
+
+.card-title { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 10px; font-family: 'Nunito', monospace; }
+.card-desc  { font-size: 13.5px; color: var(--text-sub); line-height: 1.8; }
+
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.tag {
+  font-size: 11px; font-weight: 800; padding: 4px 13px;
+  border-radius: var(--radius-btn); letter-spacing: .05em;
+}
+.tag-skill  { background: #fde8f0; color: #c8558a; }
+.tag-agent  { background: #eee8fb; color: #7b5cc0; }
+.tag-tmpl   { background: #ddf4ed; color: #2d8c68; }
+.tag-demo   { background: #fffce0; color: #9c8000; }
+
+.file-badge {
+  display: flex; flex-direction: column; gap: 8px;
+  margin-top: 20px; padding: 16px 18px; border-radius: 16px;
+  background: linear-gradient(135deg, #f3f0ff, #fde8f0);
+  border: 1.5px dashed rgba(201,182,240,.45);
+}
+.file-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 700; color: var(--text-sub);
+  font-family: 'Nunito', monospace;
+}
+.file-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.fd-x    { background: #4a99e8; }
+.fd-ig   { background: #e44ba4; }
+.fd-ln   { background: #00b900; }
+
+/* ═══════════════════════════════════════
+   FLOW SECTION
+═══════════════════════════════════════ */
+.flow-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 22px;
+}
+.flow-card {
+  background: var(--white); border-radius: var(--radius-card);
+  padding: 32px 28px;
+  border: 1.5px solid rgba(201,182,240,.2);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+  transition: transform var(--transition), box-shadow .3s;
+}
+.flow-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+.flow-num {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: linear-gradient(135deg, #FBC2D9, #C9B6F0);
+  color: #fff; font-size: 18px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 18px;
+  box-shadow: 0 6px 20px rgba(201,182,240,.4);
+}
+.flow-card h3 { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+.flow-card p  { font-size: 13px; color: var(--text-sub); line-height: 1.75; }
+.flow-arrow {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: var(--primary); margin-top: 28px;
+}
+
+/* ═══════════════════════════════════════
+   STACK
+═══════════════════════════════════════ */
+.stack-grid { display: flex; flex-wrap: wrap; gap: 14px; }
+.chip {
+  display: flex; align-items: center; gap: 8px;
+  padding: 11px 24px; border-radius: var(--radius-btn);
+  background: var(--white);
+  border: 1.5px solid rgba(201,182,240,.3);
+  font-size: 14px; font-weight: 700; color: var(--text);
+  box-shadow: 0 4px 14px rgba(201,182,240,.12);
+  transition: transform .25s, box-shadow .25s, background .25s, border-color .25s;
+  cursor: default;
+}
+.chip:hover {
+  background: linear-gradient(120deg, #fde8f0, #eee8fb);
+  border-color: transparent;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(201,182,240,.3);
+}
+
+/* ═══════════════════════════════════════
+   CONTACT
+═══════════════════════════════════════ */
+.contact-card {
+  max-width: 580px; margin: 0 auto;
+  background: linear-gradient(145deg, #fff5fa, #f3f0ff);
+  border: 1.5px solid rgba(251,194,217,.3);
+  border-radius: 40px; padding: 72px 52px;
+  text-align: center;
+  box-shadow: var(--shadow-hover);
+}
+.contact-emoji { font-size: 56px; margin-bottom: 22px; display: block; }
+.contact-card h2 { font-size: 30px; font-weight: 800; color: var(--text); margin-bottom: 14px; }
+.contact-card p  { font-size: 15px; color: var(--text-sub); line-height: 1.85; margin-bottom: 38px; }
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer {
+  position: relative; z-index: 1;
+  background: var(--bg);
+  border-top: 1.5px solid rgba(201,182,240,.2);
+  padding: 36px 52px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+.footer-logo {
+  font-size: 15px; font-weight: 800;
+  background: linear-gradient(90deg, #FBC2D9, #C9B6F0);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+footer p { font-size: 13px; color: var(--text-sub); }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media (max-width: 900px) {
+  .bento { grid-template-columns: 1fr 1fr; }
+  .card.wide { grid-column: span 2; }
+  .card.tall { grid-row: auto; }
+  .flow-grid { grid-template-columns: 1fr; }
+  nav { padding: 0 24px; }
+  .section { padding: 72px 24px; }
+}
+@media (max-width: 600px) {
+  .bento { grid-template-columns: 1fr; }
+  .card.wide { grid-column: span 1; }
+  .hero-cta-group { flex-direction: column; align-items: center; }
+  footer { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- SPARKLES -->
+<div id="sparkles"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">✦ AI DEV ✦</div>
+  <ul class="nav-links">
+    <li><a href="#works">Works</a></li>
+    <li><a href="#flow">Flow</a></li>
+    <li><a href="#stack">Stack</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section id="hero">
+  <div class="hero-badge">
+    <div class="badge-dot"></div>
+    Claude Code × AI Development
+  </div>
+  <h1 class="hero-title">
+    Building AI Tools<br>
+    with <span class="grad">Claude Code</span> ✨
+  </h1>
+  <p class="hero-sub">
+    Skills・SubAgents・Commands を活用した<br>
+    AI 開発の実績ポートフォリオ。<br>
+    やさしい技術で、未来をふんわり作ります 🌸
+  </p>
+  <div class="hero-cta-group">
+    <a href="#works" class="btn-primary">🎀 実績を見る</a>
+    <a href="#contact" class="btn-secondary">💌 お問い合わせ</a>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-dot"></div>
+    SCROLL
+  </div>
+</section>
+
+<div class="divider">☁ ✦ ☁ ✦ ☁</div>
+
+<!-- ══════════ WORKS ══════════ -->
+<section class="section" id="works">
+  <div class="sec-eyebrow">Works</div>
+  <div class="sec-title">制作実績 🎀</div>
+
+  <div class="bento">
+
+    <!-- char-counter -->
+    <div class="card" style="animation-delay:.05s">
+      <div class="card-icon-wrap i-pink">🔢</div>
+      <div class="card-title">char-counter</div>
+      <div class="card-desc">テキストの文字数を改行・スペースの有無で 4 パターン同時計測して表形式で出力するスキル。半角・全角・タブすべてに対応。</div>
+      <div class="tags">
+        <span class="tag tag-skill">Skill</span>
+      </div>
+    </div>
+
+    <!-- sns-writer -->
+    <div class="card wide" style="animation-delay:.1s">
+      <div class="card-icon-wrap i-purple">✍️</div>
+      <div class="card-title">sns-writer</div>
+      <div class="card-desc">X・Instagram・LINE 用の SNS 投稿文をテーマから自動生成。各プラットフォームの文字数制限・絵文字ルール・ハッシュタグ配置に対応したテンプレートを内包したスキル。</div>
+      <div class="tags">
+        <span class="tag tag-skill">Skill</span>
+        <span class="tag tag-tmpl">Templates</span>
+      </div>
+    </div>
+
+    <!-- sns-template-writer -->
+    <div class="card tall" style="animation-delay:.15s">
+      <div class="card-icon-wrap i-blue">📋</div>
+      <div class="card-title">sns-template-writer</div>
+      <div class="card-desc">templates/ フォルダに SNS ごとの専用テンプレートファイルを分割格納。ルール・構成・絵文字仕様を明文化し、スキルが参照して投稿文を生成する設計。</div>
+      <div class="file-badge">
+        <div class="file-item"><div class="file-dot fd-x"></div>x-template.md</div>
+        <div class="file-item"><div class="file-dot fd-ig"></div>instagram-template.md</div>
+        <div class="file-item"><div class="file-dot fd-ln"></div>line-template.md</div>
+      </div>
+      <div class="tags">
+        <span class="tag tag-skill">Skill</span>
+        <span class="tag tag-tmpl">Templates</span>
+      </div>
+    </div>
+
+    <!-- seo-blog-writer -->
+    <div class="card" style="animation-delay:.2s">
+      <div class="card-icon-wrap i-mint">📝</div>
+      <div class="card-title">seo-blog-writer</div>
+      <div class="card-desc">char-counter スキルで文字数を計測しながら、指定文字数 ±5% に自動調整する SEO ブログ執筆 SubAgent。</div>
+      <div class="tags">
+        <span class="tag tag-agent">SubAgent</span>
+        <span class="tag tag-skill">Skill連携</span>
+      </div>
+    </div>
+
+    <!-- sns-post-generator -->
+    <div class="card" style="animation-delay:.25s">
+      <div class="card-icon-wrap i-yellow">🤖</div>
+      <div class="card-title">sns-post-generator</div>
+      <div class="card-desc">sns-writer + char-counter を skills に指定した SubAgent。文字数検証ループで全 SNS を制限内に収めて出力。</div>
+      <div class="tags">
+        <span class="tag tag-agent">SubAgent</span>
+        <span class="tag tag-skill">Skill連携</span>
+      </div>
+    </div>
+
+    <!-- demo -->
+    <div class="card wide" style="animation-delay:.3s">
+      <div class="card-icon-wrap i-pink">🎬</div>
+      <div class="card-title">実行デモ</div>
+      <div class="card-desc">「秋の読書週間」「冬のおすすめカフェ」をテーマに X・Instagram・LINE の投稿文を自動生成・文字数検証まで実行した実績。char-counter スキルによる 4 パターン計測も含む。</div>
+      <div class="tags">
+        <span class="tag tag-demo">Demo</span>
+        <span class="tag tag-skill">char-counter</span>
+        <span class="tag tag-agent">sns-post-generator</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider">🌈 ✦ 🌟 ✦ 🌈</div>
+
+<!-- ══════════ FLOW ══════════ -->
+<div class="section-bg">
+  <div class="section" id="flow">
+    <div class="sec-eyebrow">How it works</div>
+    <div class="sec-title">制作フロー 🌸</div>
+    <div class="flow-grid">
+      <div class="flow-card">
+        <div class="flow-num">1</div>
+        <h3>Skill を設計する</h3>
+        <p>SKILL.md にやり方・ルール・テンプレートを定義。Claude がいつでも参照できるナレッジベースを構築。</p>
+      </div>
+      <div class="flow-card">
+        <div class="flow-num">2</div>
+        <h3>SubAgent に組み込む</h3>
+        <p>フロントマターの skills: に Skill 名を指定し、専門エージェントとして定義。独立したコンテキストで動作。</p>
+      </div>
+      <div class="flow-card">
+        <div class="flow-num">3</div>
+        <h3>Command で呼び出す</h3>
+        <p>/write-article や /sns など、よく使うワークフローをスラッシュコマンド化。ワンコマンドで自動実行。</p>
+      </div>
+    </div>
+    <div class="flow-arrow">↑ この3ステップがClaude Code自動化の基本パターン ✦</div>
+  </div>
+</div>
+
+<div class="divider">☁ ✦ ☁ ✦ ☁</div>
+
+<!-- ══════════ STACK ══════════ -->
+<section class="section" id="stack">
+  <div class="sec-eyebrow">Tech Stack</div>
+  <div class="sec-title">使用技術 🛠️</div>
+  <div class="stack-grid">
+    <div class="chip">✦ Claude Code</div>
+    <div class="chip">🌸 Claude Sonnet 4.6</div>
+    <div class="chip">📖 Skills (SKILL.md)</div>
+    <div class="chip">🤖 SubAgents</div>
+    <div class="chip">⚡ Custom Commands</div>
+    <div class="chip">🐍 Python</div>
+    <div class="chip">📝 Markdown</div>
+    <div class="chip">🔌 MCP</div>
+    <div class="chip">🌐 GitHub Pages</div>
+  </div>
+</section>
+
+<div class="divider">🌈 ✦ 🌟 ✦ 🌈</div>
+
+<!-- ══════════ CONTACT ══════════ -->
+<section class="section" id="contact">
+  <div class="contact-card">
+    <span class="contact-emoji">💌</span>
+    <h2>お問い合わせ</h2>
+    <p>AI ツール開発・Claude Code 活用に関する<br>ご相談はお気軽にどうぞ。<br>やさしくお返事します 🌸</p>
+    <a href="mailto:yo00chi55@gmail.com" class="btn-primary">メールを送る ✉️</a>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="footer-logo">✦ AI DEV ✦</div>
+  <p>© 2026 AI Dev Portfolio · Built with Claude Code 🌟</p>
+</footer>
+
+<!-- ══════════ SCRIPTS ══════════ -->
+<script>
+// --- sparkles ---
+const SYMBOLS = ['✦','🌸','⭐','✨','🌟','💫','🌈','☁','🌷','🦋','🍀','💕'];
+const sc = document.getElementById('sparkles');
+for (let i = 0; i < 28; i++) {
+  const el = document.createElement('span');
+  el.className = 'sp';
+  el.textContent = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+  el.style.cssText = `
+    left:${Math.random()*100}vw;
+    top:${Math.random()*100}vh;
+    font-size:${10 + Math.random()*16}px;
+    animation-duration:${14 + Math.random()*22}s;
+    animation-delay:${Math.random()*18}s;
+    opacity:${0.25 + Math.random()*0.35};
+  `;
+  sc.appendChild(el);
+}
+
+// --- nav shadow on scroll ---
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// --- card entrance animation (IntersectionObserver) ---
+const cards = document.querySelectorAll('.bento .card');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((e, idx) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), idx * 80);
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+cards.forEach(c => io.observe(c));
+</script>
+</body>
+</html>
