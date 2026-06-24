@@ -9,7 +9,9 @@
 <meta property="og:type" content="website">
 <title>AI Dev Portfolio ✨</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" onload="this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"></noscript>
 <style>
 /* ═══════════════════════════════════════
    RESET & VARIABLES
@@ -96,7 +98,7 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(201,182,240,.15); }
 .nav-logo {
   font-size: 17px; font-weight: 800; letter-spacing: .06em;
   background: linear-gradient(100deg, #FBC2D9 0%, #C9B6F0 55%, #B8C7F0 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
 }
 .nav-links { display: flex; gap: 36px; list-style: none; }
 .nav-links a {
@@ -157,7 +159,7 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(201,182,240,.15); }
 }
 .hero-title .grad {
   background: linear-gradient(110deg, #FBC2D9 0%, #C9B6F0 50%, #B8C7F0 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
 }
 .hero-sub {
   font-size: 16px; color: var(--text-sub); max-width: 480px;
@@ -197,7 +199,7 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(201,182,240,.15); }
 .stat-num {
   font-size: 30px; font-weight: 800;
   background: linear-gradient(135deg, #FBC2D9, #C9B6F0);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
   display: block; line-height: 1;
 }
 .stat-label { font-size: 11px; font-weight: 700; color: var(--text-sub); letter-spacing: .1em; margin-top: 6px; }
@@ -332,10 +334,11 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(201,182,240,.15); }
 .demo-toggle.open .arrow { transform: rotate(180deg); }
 
 .demo-panel {
-  max-height: 0; overflow: hidden; opacity: 0;
-  transition: max-height .45s ease, opacity .3s ease;
+  display: grid; grid-template-rows: 0fr; opacity: 0;
+  transition: grid-template-rows .45s ease, opacity .3s ease;
 }
-.demo-panel.open { max-height: 900px; opacity: 1; margin-top: 18px; }
+.demo-panel > .demo-panel-inner { overflow: hidden; }
+.demo-panel.open { grid-template-rows: 1fr; opacity: 1; margin-top: 18px; }
 
 /* char-counter result table */
 .demo-table-wrap {
@@ -514,7 +517,7 @@ footer {
 .footer-logo {
   font-size: 15px; font-weight: 800;
   background: linear-gradient(90deg, #FBC2D9, #C9B6F0);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
 }
 footer p { font-size: 13px; color: var(--text-sub); }
 
@@ -538,6 +541,12 @@ footer p { font-size: 13px; color: var(--text-sub); }
   footer { flex-direction: column; text-align: center; }
   .contact-card { padding: 48px 28px; }
   .cursor-dot, .cursor-ring { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  .cursor-dot, .cursor-ring { display: none; }
+  .sp { display: none; }
+  html { scroll-behavior: auto; }
 }
 </style>
 </head>
@@ -614,7 +623,7 @@ footer p { font-size: 13px; color: var(--text-sub); }
   <div class="bento">
 
     <!-- 1: char-counter -->
-    <div class="card" style="animation-delay:.05s">
+    <div class="card">
       <div class="card-icon-wrap i-pink">🔢</div>
       <div class="card-title">char-counter</div>
       <div class="card-desc">テキストの文字数を改行・スペースの有無で 4 パターン同時計測して表形式で出力するスキル。半角・全角・タブすべてに対応。</div>
@@ -622,9 +631,9 @@ footer p { font-size: 13px; color: var(--text-sub); }
         <span class="tag tag-skill">Skill</span>
         <span class="tag tag-demo">Python</span>
       </div>
-      <button class="demo-toggle" data-target="demo-cc">実行例を見る <span class="arrow">▼</span></button>
-      <div class="demo-panel" id="demo-cc">
-        <div class="demo-table-wrap">
+      <button type="button" class="demo-toggle" data-target="demo-cc" aria-expanded="false" aria-controls="demo-cc">実行例を見る <span class="arrow" aria-hidden="true">▼</span></button>
+      <div class="demo-panel" id="demo-cc" aria-hidden="true">
+        <div class="demo-panel-inner"><div class="demo-table-wrap">
           <div class="demo-label">char-counter / SKILL.md の実行結果</div>
           <table class="cc-table">
             <thead><tr><th>パターン</th><th>文字数</th></tr></thead>
@@ -650,12 +659,12 @@ footer p { font-size: 13px; color: var(--text-sub); }
           <div style="margin-top:14px;font-size:12px;color:var(--text-sub);line-height:1.7;">
             差分 ✦ スペース除くと <strong>252字</strong> 減 ✦ 改行除くと <strong>94字</strong> 減 ✦ 両方除くと計 <strong>346字</strong> 減
           </div>
-        </div>
+        </div></div>
       </div>
     </div>
 
     <!-- 2: sns-writer (wide) -->
-    <div class="card wide" style="animation-delay:.1s">
+    <div class="card wide">
       <div class="card-icon-wrap i-purple">✍️</div>
       <div class="card-title">sns-writer</div>
       <div class="card-desc">X・Instagram・LINE 用の SNS 投稿文をテーマから自動生成。各プラットフォームの文字数制限・絵文字ルール・ハッシュタグ配置に対応したテンプレートを内包したスキル。</div>
@@ -666,7 +675,7 @@ footer p { font-size: 13px; color: var(--text-sub); }
     </div>
 
     <!-- 3: sns-template-writer (tall) -->
-    <div class="card tall" style="animation-delay:.15s">
+    <div class="card tall">
       <div class="card-icon-wrap i-blue">📋</div>
       <div class="card-title">sns-template-writer</div>
       <div class="card-desc">templates/ フォルダに SNS ごとの専用テンプレートファイルを分割格納。ルール・構成・絵文字仕様を明文化し、スキルが参照して投稿文を生成する設計。</div>
@@ -685,7 +694,7 @@ footer p { font-size: 13px; color: var(--text-sub); }
     </div>
 
     <!-- 4: seo-blog-writer -->
-    <div class="card" style="animation-delay:.2s">
+    <div class="card">
       <div class="card-icon-wrap i-mint">📝</div>
       <div class="card-title">seo-blog-writer</div>
       <div class="card-desc">char-counter スキルで文字数を計測しながら、指定文字数 ±5% に自動調整する SEO ブログ執筆 SubAgent。Claude Code の記事 5,000 字を執筆。</div>
@@ -696,7 +705,7 @@ footer p { font-size: 13px; color: var(--text-sub); }
     </div>
 
     <!-- 5: sns-post-generator -->
-    <div class="card" style="animation-delay:.25s">
+    <div class="card">
       <div class="card-icon-wrap i-yellow">🤖</div>
       <div class="card-title">sns-post-generator</div>
       <div class="card-desc">sns-writer + char-counter を skills に指定した SubAgent。文字数検証ループで全 SNS を制限内に収めて出力。</div>
@@ -707,7 +716,7 @@ footer p { font-size: 13px; color: var(--text-sub); }
     </div>
 
     <!-- 6: demo wide -->
-    <div class="card wide" style="animation-delay:.3s">
+    <div class="card wide">
       <div class="card-icon-wrap i-pink">🎬</div>
       <div class="card-title">実行デモ — 秋の読書週間</div>
       <div class="card-desc">sns-post-generator が X・Instagram・LINE の投稿文を自動生成し、char-counter スキルで文字数を検証した実績。</div>
@@ -716,14 +725,14 @@ footer p { font-size: 13px; color: var(--text-sub); }
         <span class="tag tag-agent">sns-post-generator</span>
         <span class="tag tag-skill">char-counter</span>
       </div>
-      <button class="demo-toggle" data-target="demo-sns">実行結果を見る <span class="arrow">▼</span></button>
-      <div class="demo-panel" id="demo-sns">
-        <div class="sns-demo-tabs">
-          <button class="sns-tab x active" data-panel="p-x">𝕏 Twitter</button>
-          <button class="sns-tab ig" data-panel="p-ig">📷 Instagram</button>
-          <button class="sns-tab line" data-panel="p-ln">💬 LINE</button>
+      <button type="button" class="demo-toggle" data-target="demo-sns" aria-expanded="false" aria-controls="demo-sns">実行結果を見る <span class="arrow" aria-hidden="true">▼</span></button>
+      <div class="demo-panel" id="demo-sns" aria-hidden="true">
+        <div class="demo-panel-inner"><div class="sns-demo-tabs" role="tablist" aria-label="SNS プラットフォーム選択">
+          <button type="button" role="tab" class="sns-tab x active" data-panel="p-x" aria-selected="true" aria-controls="p-x">𝕏 Twitter</button>
+          <button type="button" role="tab" class="sns-tab ig" data-panel="p-ig" aria-selected="false" aria-controls="p-ig">📷 Instagram</button>
+          <button type="button" role="tab" class="sns-tab line" data-panel="p-ln" aria-selected="false" aria-controls="p-ln">💬 LINE</button>
         </div>
-        <div class="sns-panel active" id="p-x">
+        <div role="tabpanel" class="sns-panel active" id="p-x">
           <div class="sns-post-box">
             <div class="sns-post-text">🍂 秋の読書週間がやってきた。今年読みたい本、もう決まった？
 
@@ -738,7 +747,7 @@ footer p { font-size: 13px; color: var(--text-sub); }
             </div>
           </div>
         </div>
-        <div class="sns-panel" id="p-ig">
+        <div role="tabpanel" class="sns-panel" id="p-ig">
           <div class="sns-post-box">
             <div class="sns-post-text">📖 秋になると、なぜか本が読みたくなる。
 
@@ -761,7 +770,7 @@ footer p { font-size: 13px; color: var(--text-sub); }
             </div>
           </div>
         </div>
-        <div class="sns-panel" id="p-ln">
+        <div role="tabpanel" class="sns-panel" id="p-ln">
           <div class="sns-post-box">
             <div class="sns-post-text">📚 秋の読書週間が始まるよ！
 
@@ -780,7 +789,7 @@ footer p { font-size: 13px; color: var(--text-sub); }
             </div>
           </div>
         </div>
-      </div>
+</div>      </div>
     </div>
 
   </div>
@@ -884,34 +893,42 @@ window.addEventListener('scroll', () => {
   document.getElementById('nav').classList.toggle('scrolled', scrollY > 40);
 }, {passive:true});
 
-// --- card entrance ---
+// --- card entrance (global card index for consistent stagger) ---
+const cards = Array.from(document.querySelectorAll('.bento .card'));
 const io = new IntersectionObserver(entries => {
-  entries.forEach((e, idx) => {
+  entries.forEach(e => {
     if (e.isIntersecting) {
+      const idx = cards.indexOf(e.target);
       setTimeout(() => e.target.classList.add('visible'), idx * 85);
       io.unobserve(e.target);
     }
   });
 }, {threshold: 0.1});
-document.querySelectorAll('.bento .card').forEach(c => io.observe(c));
+cards.forEach(c => io.observe(c));
 
-// --- demo toggle ---
+// --- demo toggle (sync aria-expanded + aria-hidden) ---
 document.querySelectorAll('.demo-toggle').forEach(btn => {
   btn.addEventListener('click', () => {
     const panel = document.getElementById(btn.dataset.target);
     const isOpen = panel.classList.toggle('open');
     btn.classList.toggle('open', isOpen);
+    btn.setAttribute('aria-expanded', isOpen);
+    panel.setAttribute('aria-hidden', !isOpen);
   });
 });
 
-// --- SNS tabs ---
-document.querySelectorAll('.sns-demo-tabs').forEach(tabGroup => {
-  tabGroup.querySelectorAll('.sns-tab').forEach(tab => {
+// --- SNS tabs (sync aria-selected) ---
+document.querySelectorAll('[role="tablist"]').forEach(tabGroup => {
+  tabGroup.querySelectorAll('[role="tab"]').forEach(tab => {
     tab.addEventListener('click', () => {
       const wrap = tabGroup.closest('.demo-panel');
-      tabGroup.querySelectorAll('.sns-tab').forEach(t => t.classList.remove('active'));
-      wrap.querySelectorAll('.sns-panel').forEach(p => p.classList.remove('active'));
+      tabGroup.querySelectorAll('[role="tab"]').forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      wrap.querySelectorAll('[role="tabpanel"]').forEach(p => p.classList.remove('active'));
       tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
       document.getElementById(tab.dataset.panel).classList.add('active');
     });
   });
