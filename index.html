@@ -54,14 +54,16 @@ body {
   width: 10px; height: 10px; border-radius: 50%;
   background: linear-gradient(135deg, #FBC2D9, #C9B6F0);
   position: fixed; pointer-events: none; z-index: 9999;
-  transform: translate(-50%, -50%);
+  top: 0; left: 0;
   mix-blend-mode: multiply;
+  will-change: transform;
 }
 .cursor-ring {
   width: 36px; height: 36px; border-radius: 50%;
   border: 2px solid rgba(201,182,240,.5);
   position: fixed; pointer-events: none; z-index: 9998;
-  transform: translate(-50%, -50%);
+  top: 0; left: 0;
+  will-change: transform;
 }
 
 /* ═══════════════════════════════════════
@@ -542,6 +544,22 @@ footer p { font-size: 13px; color: var(--text-sub); }
   .contact-card { padding: 48px 28px; }
   .cursor-dot, .cursor-ring { display: none; }
 }
+/* ═══════════════════════════════════════
+   FOCUS VISIBLE
+═══════════════════════════════════════ */
+:focus-visible {
+  outline: 2.5px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+/* Pill-shaped elements get matching radius */
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.demo-toggle:focus-visible,
+.sns-tab:focus-visible {
+  border-radius: var(--radius-btn);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
   .cursor-dot, .cursor-ring { display: none; }
@@ -557,7 +575,7 @@ footer p { font-size: 13px; color: var(--text-sub); }
 <div class="cursor-ring" id="cursorRing"></div>
 
 <!-- SPARKLES -->
-<div id="sparkles"></div>
+<div id="sparkles" aria-hidden="true"></div>
 
 <!-- NAV -->
 <nav id="nav">
@@ -879,14 +897,19 @@ for (let i = 0; i < 28; i++) {
 // --- cursor trail ---
 const dot = document.getElementById('cursorDot');
 const ring = document.getElementById('cursorRing');
-let mx=0, my=0, rx=0, ry=0;
-document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
-(function animCursor() {
-  dot.style.left = mx+'px'; dot.style.top = my+'px';
+let mx=0, my=0, rx=0, ry=0, rafId=null;
+document.addEventListener('mousemove', e => {
+  mx=e.clientX; my=e.clientY;
+  if (!rafId) rafId = requestAnimationFrame(animCursor);
+}, {passive: true});
+function animCursor() {
+  dot.style.transform = `translate(calc(${mx}px - 50%), calc(${my}px - 50%))`;
   rx += (mx-rx)*.12; ry += (my-ry)*.12;
-  ring.style.left = rx+'px'; ring.style.top = ry+'px';
-  requestAnimationFrame(animCursor);
-})();
+  ring.style.transform = `translate(calc(${rx}px - 50%), calc(${ry}px - 50%))`;
+  rafId = (Math.abs(mx-rx) > 0.1 || Math.abs(my-ry) > 0.1)
+    ? requestAnimationFrame(animCursor)
+    : null;
+}
 
 // --- nav shadow ---
 window.addEventListener('scroll', () => {
